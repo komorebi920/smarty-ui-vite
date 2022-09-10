@@ -2,10 +2,12 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJSX from "@vitejs/plugin-vue-jsx";
+import Unocss from "./config/unocss";
 
 const rollupOptions = {
   external: ["vue", "vue-router"],
   output: {
+    assetFileNames: "assets/[name][extname]",
     globals: {
       vue: "Vue",
     },
@@ -20,17 +22,19 @@ export default defineConfig({
     vueJSX({
       // options are passed on to @vue/babel-plugin-jsx
     }),
+    // 添加 UnoCSS 插件
+    Unocss(),
   ],
   build: {
     rollupOptions,
     minify: false,
-    // 添加库模式打包配置
+    cssCodeSplit: true, // 在编译时独立输出 css
     lib: {
+      // 添加库模式打包配置
       entry: "./src/entry.ts",
       name: "SmartyUI",
       fileName: (format) => `smarty-ui.${format}.js`,
-      // 导出模块格式
-      formats: ["es", "umd", "iife"],
+      formats: ["es", "umd", "iife"], // 导出模块格式
     },
   },
 });
